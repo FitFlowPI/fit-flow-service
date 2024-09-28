@@ -1,2 +1,14 @@
-# fit-flow-service
-Backend repository for the FitFlow project, managing the server-side logic of the fitness application.
+# FitFlow Service
+
+## Descrição
+Este repositório contém o código do back-end da aplicação FitFlow. 
+
+## Documentação
+- [Link para o documento de visão](link)
+- [Link para User Stories](link)
+- [Link para HLD](link)
+- [Link para LLD](link)
+
+## Como Rodar o Projeto
+- Passos para configurar o ambiente.
+- Comandos de build.
