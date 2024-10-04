@@ -1,0 +1,21 @@
+version: '3'
+services:
+  postgres:
+    image: postgres:13
+    container_name: npostgres-container
+    environment:
+      POSTGRES_USER: fitflow
+      POSTGRES_PASSWORD: fitflow
+      POSTGRES_DB: fitflow_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - spring-network
+
+volumes:
+  postgres_data:
+
+networks:
+  spring-network:
