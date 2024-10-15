@@ -1,5 +1,7 @@
 package com.fitflow.fitflow_service.user;
 
+import com.fitflow.fitflow_service.user.enums.Gender;
+import com.fitflow.fitflow_service.user.enums.UserType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -37,11 +39,11 @@ public class User implements UserDetails {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private UserRole user_type;
+    private UserType user_type;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private UserGender gender;
+    private Gender gender;
 
     @Column(nullable = false, precision = 5, scale = 2)
     private BigDecimal weight;
@@ -53,7 +55,7 @@ public class User implements UserDetails {
         String name,
         String email,
         String password,
-        UserGender gender,
+        Gender gender,
         BigDecimal weight,
         BigDecimal height
     ) {
@@ -69,14 +71,14 @@ public class User implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<>();
 
-        authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+        authorities.add(new SimpleGrantedAuthority("ROLE_STUDENT"));
 
-        if (this.user_type == UserRole.ADMIN) {
-            authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        if (this.user_type == UserType.PERSONAL_TRAINER) {
+            authorities.add(new SimpleGrantedAuthority("ROLE_PERSONAL_TRAINER"));
         }
 
-        if (this.user_type == UserRole.TRAINER) {
-            authorities.add(new SimpleGrantedAuthority("ROLE_TRAINER"));
+        if (this.user_type == UserType.AUTO_TRAINER) {
+            authorities.add(new SimpleGrantedAuthority("ROLE_AUTO_TRAINER"));
         }
 
         return authorities;
