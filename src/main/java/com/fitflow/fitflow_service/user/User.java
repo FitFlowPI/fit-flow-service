@@ -3,9 +3,10 @@ package com.fitflow.fitflow_service.user;
 import com.fitflow.fitflow_service.user.enums.Gender;
 import com.fitflow.fitflow_service.user.enums.UserType;
 import jakarta.persistence.*;
-import lombok.Getter;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,15 +16,18 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+@Data
+@Builder
 @Entity
-@Getter
-@Setter
+@AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "users")
 public class User implements UserDetails {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
 
     @Column(nullable = false)
     private String name;
@@ -73,11 +77,11 @@ public class User implements UserDetails {
 
         authorities.add(new SimpleGrantedAuthority("ROLE_STUDENT"));
 
-        if (this.user_type == UserType.PERSONAL_TRAINER) {
+        if (this.user_type == UserType.personal_trainer) {
             authorities.add(new SimpleGrantedAuthority("ROLE_PERSONAL_TRAINER"));
         }
 
-        if (this.user_type == UserType.AUTO_TRAINER) {
+        if (this.user_type == UserType.auto_trainer) {
             authorities.add(new SimpleGrantedAuthority("ROLE_AUTO_TRAINER"));
         }
 
