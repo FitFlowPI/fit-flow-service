@@ -1,10 +1,14 @@
 package com.fitflow.fitflow_service.auth;
 
+import com.fitflow.fitflow_service.auth.AuthenticationRequest;
+import com.fitflow.fitflow_service.auth.AuthenticationResponse;
+import com.fitflow.fitflow_service.auth.RegisterRequest;
+import com.fitflow.fitflow_service.config.ApiResponse;
 import com.fitflow.fitflow_service.config.JwtService;
-import com.fitflow.fitflow_service.user.UserRepository;
 import com.fitflow.fitflow_service.user.User;
-import com.fitflow.fitflow_service.user.enums.UserType;
+import com.fitflow.fitflow_service.user.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,36 +29,49 @@ public class AuthenticationService {
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
-    public AuthenticationResponse register(RegisterRequest request) {
+    public ApiResponse<AuthenticationResponse> register(RegisterRequest request) {
         var user = User.builder()
                 .name(request.getUsername())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .active_plan(request.getActive_plan() != null ? request.getActive_plan() : false) // Ensure active_plan is set
+                .active_plan(request.getActive_plan() != null ? request.getActive_plan() : false)
                 .user_type(request.getUser_type())
                 .gender(request.getGender())
                 .weight(request.getWeight())
                 .height(request.getHeight())
                 .build();
         userRepository.save(user);
+
         var jwtToken = jwtService.generateToken(user);
-        return AuthenticationResponse.builder()
+
+        AuthenticationResponse authResponse = AuthenticationResponse.builder()
                 .token(jwtToken)
+                .email(user.getEmail())
+                .name(user.getName())
+                .userType(user.getUser_type().toString())
                 .build();
+
+        return new ApiResponse<>(HttpStatus.CREATED.value(), "Usuário registrado com sucesso", authResponse);
     }
 
-    public AuthenticationResponse authenticate(AuthenticationRequest request, AuthenticationManager authenticationManager) {
+    public ApiResponse<AuthenticationResponse> authenticate(AuthenticationRequest request, AuthenticationManager authenticationManager) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmail(),
                         request.getPassword()
                 )
         );
+
         var user = userRepository.findByEmail(request.getEmail()).orElseThrow();
         var jwtToken = jwtService.generateToken(user);
-        return new AuthenticationResponse()
-                .builder()
+
+        AuthenticationResponse authResponse = AuthenticationResponse.builder()
                 .token(jwtToken)
+                .email(user.getEmail())
+                .name(user.getName())
+                .userType(user.getUser_type().toString())
                 .build();
+
+        return new ApiResponse<>(HttpStatus.OK.value(), "Usuário autenticado com sucesso", authResponse);
     }
 }
