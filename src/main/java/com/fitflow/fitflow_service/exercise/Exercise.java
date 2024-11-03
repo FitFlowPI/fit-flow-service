@@ -14,9 +14,15 @@ public class Exercise {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String name;
+
     private String description;
     private String media;
+
+    @Column(name = "current_weight")
     private BigDecimal currentWeight;
+
+    @Column(name = "rest_interval")
     private int restInterval;
 }
