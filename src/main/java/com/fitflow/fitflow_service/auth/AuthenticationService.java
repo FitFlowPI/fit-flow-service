@@ -7,6 +7,7 @@ import com.fitflow.fitflow_service.config.ApiResponse;
 import com.fitflow.fitflow_service.config.JwtService;
 import com.fitflow.fitflow_service.user.User;
 import com.fitflow.fitflow_service.user.UserRepository;
+import com.fitflow.fitflow_service.user.UserWeightHistoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,6 +24,7 @@ public class AuthenticationService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+    private final UserWeightHistoryService userWeightHistoryService;
 
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         return userRepository.findByEmail(email)
@@ -41,6 +43,8 @@ public class AuthenticationService {
                 .height(request.getHeight())
                 .build();
         userRepository.save(user);
+
+        userWeightHistoryService.saveUserWeightHistory(user.getId(), user.getWeight());
 
         var jwtToken = jwtService.generateToken(user);
 
