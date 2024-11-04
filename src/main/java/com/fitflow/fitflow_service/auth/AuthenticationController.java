@@ -5,6 +5,7 @@ import com.fitflow.fitflow_service.auth.AuthenticationResponse;
 import com.fitflow.fitflow_service.auth.AuthenticationService;
 import com.fitflow.fitflow_service.auth.RegisterRequest;
 import com.fitflow.fitflow_service.config.ApiResponse;
+import com.fitflow.fitflow_service.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,10 +20,17 @@ public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
     private final AuthenticationManager authenticationManager;
+    private final UserRepository userRepository;
 
     @PostMapping("/authenticate")
     public ResponseEntity<ApiResponse<AuthenticationResponse>> authenticate(@RequestBody AuthenticationRequest request) {
         return ResponseEntity.ok(authenticationService.authenticate(request, authenticationManager));
+    }
+
+    @GetMapping("/check-email")
+    public ResponseEntity<Boolean> checkEmail(@RequestParam String email) {
+        boolean exists = userRepository.findByEmail(email).isPresent();
+        return ResponseEntity.ok(exists);
     }
 
     @PostMapping("/register")
