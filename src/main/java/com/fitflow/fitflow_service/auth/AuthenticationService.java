@@ -1,21 +1,20 @@
 package com.fitflow.fitflow_service.auth;
 
-import com.fitflow.fitflow_service.auth.AuthenticationRequest;
-import com.fitflow.fitflow_service.auth.AuthenticationResponse;
-import com.fitflow.fitflow_service.auth.RegisterRequest;
-import com.fitflow.fitflow_service.config.ApiResponse;
-import com.fitflow.fitflow_service.config.JwtService;
-import com.fitflow.fitflow_service.user.User;
-import com.fitflow.fitflow_service.user.UserRepository;
-import com.fitflow.fitflow_service.user.UserWeightHistoryService;
+import com.fitflow.fitflow_service.common.exception.UserAlreadyExistsException;
+import com.fitflow.fitflow_service.common.response.ApiResponse;
+import com.fitflow.fitflow_service.user.model.User;
+import com.fitflow.fitflow_service.user.repository.UserRepository;
+import com.fitflow.fitflow_service.user.service.UserWeightHistoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -26,27 +25,30 @@ public class AuthenticationService {
     private final JwtService jwtService;
     private final UserWeightHistoryService userWeightHistoryService;
 
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-    }
-
     public ApiResponse<AuthenticationResponse> register(RegisterRequest request) {
+        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
+            throw new UserAlreadyExistsException("O e-mail já está registrado: " + request.getEmail());
+        }
+
+        // Criação do usuário
         var user = User.builder()
                 .name(request.getUsername())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .active_plan(request.getActive_plan() != null ? request.getActive_plan() : false)
+                .active_plan(Boolean.TRUE.equals(request.getActive_plan()))
                 .user_type(request.getUser_type())
                 .gender(request.getGender())
                 .weight(request.getWeight())
                 .height(request.getHeight())
                 .build();
-        userRepository.save(user);
 
+        userRepository.save(user);
         userWeightHistoryService.saveUserWeightHistory(user.getId(), user.getWeight());
 
-        var jwtToken = jwtService.generateToken(user);
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("role", user.getUser_type().toString());
+
+        var jwtToken = jwtService.generateToken(claims, user);
 
         AuthenticationResponse authResponse = AuthenticationResponse.builder()
                 .token(jwtToken)
@@ -55,7 +57,7 @@ public class AuthenticationService {
                 .userType(user.getUser_type().toString())
                 .build();
 
-        return new ApiResponse<>(HttpStatus.CREATED.value(), "Usuário registrado com sucesso", authResponse);
+        return new ApiResponse<>(true, "Usuário registrado com sucesso", authResponse, HttpStatus.CREATED.value());
     }
 
     public ApiResponse<AuthenticationResponse> authenticate(AuthenticationRequest request, AuthenticationManager authenticationManager) {
@@ -66,8 +68,13 @@ public class AuthenticationService {
                 )
         );
 
-        var user = userRepository.findByEmail(request.getEmail()).orElseThrow();
-        var jwtToken = jwtService.generateToken(user);
+        var user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado: " + request.getEmail()));
+
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("role", user.getUser_type().toString());
+
+        var jwtToken = jwtService.generateToken(claims, user);
 
         AuthenticationResponse authResponse = AuthenticationResponse.builder()
                 .token(jwtToken)
@@ -76,6 +83,6 @@ public class AuthenticationService {
                 .userType(user.getUser_type().toString())
                 .build();
 
-        return new ApiResponse<>(HttpStatus.OK.value(), "Usuário autenticado com sucesso", authResponse);
+        return new ApiResponse<>(true, "Usuário autenticado com sucesso", authResponse, HttpStatus.CREATED.value());
     }
 }

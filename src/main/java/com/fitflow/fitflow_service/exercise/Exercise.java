@@ -1,5 +1,6 @@
 package com.fitflow.fitflow_service.exercise;
 
+import com.fitflow.fitflow_service.user.model.User;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -17,12 +18,19 @@ public class Exercise {
     @Column(nullable = false)
     private String name;
 
+    @Column
     private String description;
-    private String media;
 
-    @Column(name = "current_weight")
-    private BigDecimal currentWeight;
+    @Column
+    private String media; // URL para imagem/vídeo
+
+    @Column(name = "current_weight", precision = 5, scale = 2)
+    private Double currentWeight;
 
     @Column(name = "rest_interval")
-    private int restInterval;
+    private Integer restInterval; // em segundos
+
+    @ManyToOne
+    @JoinColumn(name = "creator_id", nullable = false)
+    private User creator;
 }

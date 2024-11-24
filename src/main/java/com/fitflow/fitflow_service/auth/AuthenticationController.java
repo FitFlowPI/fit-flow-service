@@ -1,11 +1,8 @@
 package com.fitflow.fitflow_service.auth;
 
-import com.fitflow.fitflow_service.auth.AuthenticationRequest;
-import com.fitflow.fitflow_service.auth.AuthenticationResponse;
-import com.fitflow.fitflow_service.auth.AuthenticationService;
-import com.fitflow.fitflow_service.auth.RegisterRequest;
-import com.fitflow.fitflow_service.config.ApiResponse;
-import com.fitflow.fitflow_service.user.UserRepository;
+import com.fitflow.fitflow_service.common.response.ApiResponse;
+import com.fitflow.fitflow_service.user.repository.UserRepository;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +20,7 @@ public class AuthenticationController {
     private final UserRepository userRepository;
 
     @PostMapping("/authenticate")
-    public ResponseEntity<ApiResponse<AuthenticationResponse>> authenticate(@RequestBody AuthenticationRequest request) {
+    public ResponseEntity<ApiResponse<AuthenticationResponse>> authenticate(@RequestBody @Valid AuthenticationRequest request) {
         return ResponseEntity.ok(authenticationService.authenticate(request, authenticationManager));
     }
 
@@ -34,18 +31,14 @@ public class AuthenticationController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<ApiResponse<AuthenticationResponse>> register(@RequestBody RegisterRequest request) {
-        return ResponseEntity.status(201).body(authenticationService.register(request));
+    public ResponseEntity<ApiResponse<AuthenticationResponse>> register(@RequestBody @Valid RegisterRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(authenticationService.register(request));
     }
 
-    @GetMapping("/logout")
-    public ResponseEntity<ApiResponse<Void>> logout() {
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout() {
         SecurityContextHolder.clearContext();
-        ApiResponse<Void> response = new ApiResponse<>(
-                204,
-                "Logout realizado com sucesso",
-                null
-        );
-        return ResponseEntity.status(204).body(response);
+        return ResponseEntity.noContent().build();
     }
 }
+

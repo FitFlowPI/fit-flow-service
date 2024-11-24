@@ -2,13 +2,12 @@ package com.fitflow.fitflow_service.exercise;
 
 import lombok.Data;
 
-import java.math.BigDecimal;
-
 @Data
-public class CreateExerciseRequest {
+public class UpdateExerciseRequest {
     private String name;
     private String description;
     private String media;
     private Double currentWeight;
     private Integer restInterval;
 }
+

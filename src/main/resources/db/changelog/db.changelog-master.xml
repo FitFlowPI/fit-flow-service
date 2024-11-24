@@ -7,5 +7,8 @@
 
     <include file="db/changelog/001-create-tables.sql"/>
     <include file="db/changelog/002-enchance_user_attributes_and_payment_tracking.sql"/>
+    <include file="db/changelog/003-enchance_training_sheets_table.sql"/>
+    <include file="db/changelog/004-set-enums-to-upper-case.sql"/>
+    <include file="db/changelog/005-change-user-weight-and-height-type.sql"/>
 
 </databaseChangeLog>
