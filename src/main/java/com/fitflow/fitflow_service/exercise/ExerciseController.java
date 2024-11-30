@@ -1,7 +1,7 @@
 package com.fitflow.fitflow_service.exercise;
 
-import com.fitflow.fitflow_service.user.User;
-import com.fitflow.fitflow_service.user.UserRepository;
+import com.fitflow.fitflow_service.user.model.User;
+import com.fitflow.fitflow_service.user.repository.UserRepository;
 import com.fitflow.fitflow_service.user.enums.UserType;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/exercise")
 public class ExerciseController {
 
-    private final ExerciseRepository exerciseRepository;
+    /*private final ExerciseRepository exerciseRepository;
     private final UserRepository userRepository;
 
     @PostMapping("/create")
@@ -36,5 +36,5 @@ public class ExerciseController {
         exerciseRepository.save(exercise);
 
         return ResponseEntity.ok("Exercise created successfully");
-    }
+    }*/
 }

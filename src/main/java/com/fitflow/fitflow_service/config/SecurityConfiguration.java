@@ -1,5 +1,6 @@
 package com.fitflow.fitflow_service.config;
 
+import com.fitflow.fitflow_service.auth.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,6 +25,8 @@ public class SecurityConfiguration {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers("/api/v1/auth/**").permitAll()
+                        .requestMatchers("/api/v1/user/**").hasAnyRole("STUDENT", "AUTO_TRAINER", "PERSONAL_TRAINER")
+                        .requestMatchers("/api/v1/exercise/**").hasRole("PERSONAL_TRAINER")
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session ->
@@ -34,5 +37,4 @@ public class SecurityConfiguration {
 
         return http.build();
     }
-
 }

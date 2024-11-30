@@ -1,4 +1,4 @@
-package com.fitflow.fitflow_service.user;
+package com.fitflow.fitflow_service.user.model;
 
 import com.fitflow.fitflow_service.user.enums.Gender;
 import com.fitflow.fitflow_service.user.enums.UserType;
@@ -28,7 +28,6 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
     @Column(nullable = false)
     private String name;
 
@@ -39,52 +38,29 @@ public class User implements UserDetails {
     private String password;
 
     @Column(nullable = false)
-    private Boolean active_plan = false;
+    private Boolean active_plan;
 
-    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private UserType user_type;
 
-    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
-    @Column(nullable = false, precision = 5, scale = 2)
-    private BigDecimal weight;
+    private Float weight;
 
-    @Column(nullable = false, precision = 5, scale = 2)
-    private BigDecimal height;
+    private Float height;
 
-    public User (
-        String name,
-        String email,
-        String password,
-        Gender gender,
-        BigDecimal weight,
-        BigDecimal height
-    ) {
-        this.name = name;
-        this.email = email;
-        this.password = password;
-        this.gender = gender;
-        this.weight = weight;
-        this.height = height;
-    }
+    @Column
+    private String profile_picture_url;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<>();
-
-        authorities.add(new SimpleGrantedAuthority("ROLE_STUDENT"));
-
-        if (this.user_type == UserType.personal_trainer) {
-            authorities.add(new SimpleGrantedAuthority("ROLE_PERSONAL_TRAINER"));
+        if (user_type != null) {
+            authorities.add(new SimpleGrantedAuthority("ROLE_" + user_type.name().toUpperCase()));
+        } else {
+            authorities.add(new SimpleGrantedAuthority("ROLE_STUDENT"));
         }
-
-        if (this.user_type == UserType.auto_trainer) {
-            authorities.add(new SimpleGrantedAuthority("ROLE_AUTO_TRAINER"));
-        }
-
         return authorities;
     }
 

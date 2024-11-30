@@ -2,10 +2,8 @@ package com.fitflow.fitflow_service.trainingSheet;
 
 import com.fitflow.fitflow_service.exercise.Exercise;
 import com.fitflow.fitflow_service.exercise.ExerciseRepository;
-import com.fitflow.fitflow_service.trainingSheet.TrainingSheetExerciseRepository;
-import com.fitflow.fitflow_service.trainingSheet.TrainingSheetRepository;
-import com.fitflow.fitflow_service.user.User;
-import com.fitflow.fitflow_service.user.UserRepository;
+import com.fitflow.fitflow_service.user.model.User;
+import com.fitflow.fitflow_service.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

@@ -1,5 +1,6 @@
-package com.fitflow.fitflow_service.user;
+package com.fitflow.fitflow_service.user.repository;
 
+import com.fitflow.fitflow_service.user.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

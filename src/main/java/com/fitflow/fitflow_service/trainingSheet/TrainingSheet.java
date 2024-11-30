@@ -1,6 +1,6 @@
 package com.fitflow.fitflow_service.trainingSheet;
 
-import com.fitflow.fitflow_service.user.User;
+import com.fitflow.fitflow_service.user.model.User;
 import jakarta.persistence.*;
 import lombok.Data;
 

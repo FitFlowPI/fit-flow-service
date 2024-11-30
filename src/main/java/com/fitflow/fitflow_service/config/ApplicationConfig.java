@@ -1,6 +1,6 @@
 package com.fitflow.fitflow_service.config;
 
-import com.fitflow.fitflow_service.user.UserRepository;
+import com.fitflow.fitflow_service.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

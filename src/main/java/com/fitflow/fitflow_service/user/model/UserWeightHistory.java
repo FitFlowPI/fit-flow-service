@@ -1,4 +1,4 @@
-package com.fitflow.fitflow_service.user;
+package com.fitflow.fitflow_service.user.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
@@ -19,7 +19,7 @@ public class UserWeightHistory {
     private Long userId;
 
     @Column(name = "weight", nullable = false)
-    private BigDecimal weight;
+    private Float weight;
 
     @Column(name = "recorded_date", nullable = false)
     private LocalDate recordedDate = LocalDate.now();
