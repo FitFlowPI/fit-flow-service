@@ -1,6 +1,6 @@
 package com.fitflow.fitflow_service.trainingSheet;
 
-import com.fitflow.fitflow_service.exercise.Exercise;
+import com.fitflow.fitflow_service.exercise.model.Exercise;
 import jakarta.persistence.*;
 import lombok.Data;
 

@@ -1,7 +1,7 @@
 package com.fitflow.fitflow_service.trainingSheet;
 
-import com.fitflow.fitflow_service.exercise.Exercise;
-import com.fitflow.fitflow_service.exercise.ExerciseRepository;
+import com.fitflow.fitflow_service.exercise.model.Exercise;
+import com.fitflow.fitflow_service.exercise.repository.ExerciseRepository;
 import com.fitflow.fitflow_service.user.model.User;
 import com.fitflow.fitflow_service.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

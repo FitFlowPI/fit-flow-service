@@ -1,0 +1,1 @@
+ALTER TABLE exercises ADD COLUMN creator_id BIGINT NOT NULL;
