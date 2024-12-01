@@ -1,7 +1,9 @@
 package com.fitflow.fitflow_service.user.model;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.fitflow.fitflow_service.user.enums.Gender;
 import com.fitflow.fitflow_service.user.enums.UserType;
+import com.fitflow.fitflow_service.user.view.UserView;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,5 +1,6 @@
 package com.fitflow.fitflow_service.exercise.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fitflow.fitflow_service.user.model.User;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -32,5 +33,6 @@ public class Exercise {
 
     @ManyToOne
     @JoinColumn(name = "creator_id", nullable = false)
+    @JsonIgnoreProperties({"password", "email", "authorities", "active_plan"})
     private User creator;
 }

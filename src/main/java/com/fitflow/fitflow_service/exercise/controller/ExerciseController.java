@@ -32,7 +32,7 @@ public class ExerciseController {
             @RequestBody CreateExerciseRequest request) {
         User creator = userService.findUserByEmail(userDetails.getUsername());
         Exercise exercise = exerciseService.createExercise(request, creator);
-        ApiResponse<Exercise> response = new ApiResponse<>(true, "Exercise created successfully", exercise, HttpStatus.CREATED.value());
+        ApiResponse<Exercise> response = ApiResponse.success("Exercise created successfully", exercise, HttpStatus.CREATED.value());
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -42,9 +42,11 @@ public class ExerciseController {
             @AuthenticationPrincipal UserDetails userDetails) {
         User user = userService.findUserByEmail(userDetails.getUsername());
         List<Exercise> exercises = exerciseService.getExercises(user);
-        ApiResponse<List<Exercise>> response = new ApiResponse<>(true, "Exercises retrieved successfully", exercises, HttpStatus.OK.value());
+        ApiResponse<List<Exercise>> response = ApiResponse.success("Exercises retrieved successfully", exercises, HttpStatus.OK.value());
         return ResponseEntity.ok(response);
     }
+
+
 
     @PutMapping("/{exerciseId}")
     @PreAuthorize("hasRole('PERSONAL_TRAINER') or hasRole('AUTO_TRAINER')")
@@ -54,7 +56,18 @@ public class ExerciseController {
             @RequestBody UpdateExerciseRequest request) {
         User user = userService.findUserByEmail(userDetails.getUsername());
         Exercise exercise = exerciseService.updateExercise(exerciseId, request, user);
-        ApiResponse<Exercise> response = new ApiResponse<>(true, "Exercise updated successfully", exercise, HttpStatus.OK.value());
+        ApiResponse<Exercise> response = ApiResponse.success("Exercise updated successfully", exercise, HttpStatus.OK.value());
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/{exerciseId}")
+    @PreAuthorize("hasRole('PERSONAL_TRAINER') or hasRole('AUTO_TRAINER')")
+    public ResponseEntity<ApiResponse<Exercise>> getExerciseById(
+            @PathVariable Long exerciseId,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        User user = userService.findUserByEmail(userDetails.getUsername());
+        Exercise exercise = exerciseService.getExerciseById(exerciseId, user);
+        ApiResponse<Exercise> response = ApiResponse.success("Exercise retrieved successfully", exercise, HttpStatus.OK.value());
         return ResponseEntity.ok(response);
     }
 
@@ -65,7 +78,7 @@ public class ExerciseController {
             @AuthenticationPrincipal UserDetails userDetails) {
         User user = userService.findUserByEmail(userDetails.getUsername());
         exerciseService.deleteExercise(exerciseId, user);
-        ApiResponse<Void> response = new ApiResponse<>(true, "Exercise deleted successfully", null, HttpStatus.NO_CONTENT.value());
+        ApiResponse<Void> response = ApiResponse.success("Exercise deleted successfully", null, HttpStatus.NO_CONTENT.value());
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(response);
     }
 }

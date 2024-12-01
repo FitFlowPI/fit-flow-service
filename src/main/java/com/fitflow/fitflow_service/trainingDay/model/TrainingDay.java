@@ -1,15 +1,18 @@
-package com.fitflow.fitflow_service.trainingSheet;
+package com.fitflow.fitflow_service.trainingDay.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fitflow.fitflow_service.user.model.User;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @Entity
-@Table(name = "training_sheets")
-public class TrainingSheet {
+@Table(name = "training_days")
+public class TrainingDay {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,5 +26,10 @@ public class TrainingSheet {
 
     @ManyToOne
     @JoinColumn(name = "creator_id", nullable = false)
+    @JsonIgnore
     private User creator;
+
+    @OneToMany(mappedBy = "trainingDay", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<TrainingDayExercise> exercises = new ArrayList<>();
 }
