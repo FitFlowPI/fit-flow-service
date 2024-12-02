@@ -1,5 +1,7 @@
 package com.fitflow.fitflow_service.trainingDay.service;
 
+import com.fitflow.fitflow_service.common.exception.ResourceNotFoundException;
+import com.fitflow.fitflow_service.common.exception.UnauthorizedAccessException;
 import com.fitflow.fitflow_service.exercise.model.Exercise;
 import com.fitflow.fitflow_service.exercise.repository.ExerciseRepository;
 import com.fitflow.fitflow_service.trainingDay.dto.CreateTrainingDayExerciseRequest;
@@ -34,7 +36,7 @@ public class TrainingDayService {
 
         for (CreateTrainingDayExerciseRequest exerciseRequest : request.getExercises()) {
             Exercise exercise = exerciseRepository.findById(exerciseRequest.getExerciseId())
-                    .orElseThrow(() -> new RuntimeException("Exercise not found"));
+                    .orElseThrow(() -> new ResourceNotFoundException("Exercise not found"));
 
             TrainingDayExercise trainingDayExercise = new TrainingDayExercise();
             trainingDayExercise.setTrainingDay(trainingDay);
@@ -55,10 +57,10 @@ public class TrainingDayService {
 
     public TrainingDay updateTrainingDay(Long trainingDayId, CreateTrainingDayRequest request, User user) {
         TrainingDay trainingDay = trainingDayRepository.findById(trainingDayId)
-                .orElseThrow(() -> new RuntimeException("Training day not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Training day not found"));
 
         if (!trainingDay.getCreator().getId().equals(user.getId())) {
-            throw new RuntimeException("User cannot update a training day they didn't create");
+            throw new UnauthorizedAccessException("User cannot update a training day they didn't create");
         }
 
         trainingDay.setName(request.getName());
@@ -66,7 +68,7 @@ public class TrainingDayService {
 
         for (CreateTrainingDayExerciseRequest exerciseRequest : request.getExercises()) {
             Exercise exercise = exerciseRepository.findById(exerciseRequest.getExerciseId())
-                    .orElseThrow(() -> new RuntimeException("Exercise not found"));
+                    .orElseThrow(() -> new ResourceNotFoundException("Exercise not found"));
 
             TrainingDayExercise trainingDayExercise = new TrainingDayExercise();
             trainingDayExercise.setTrainingDay(trainingDay);
@@ -83,10 +85,10 @@ public class TrainingDayService {
 
     public void deleteTrainingDay(Long trainingDayId, User user) {
         TrainingDay trainingDay = trainingDayRepository.findById(trainingDayId)
-                .orElseThrow(() -> new RuntimeException("Training day not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Training day not found"));
 
         if (!trainingDay.getCreator().getId().equals(user.getId())) {
-            throw new RuntimeException("User cannot delete a training day they didn't create");
+            throw new UnauthorizedAccessException("User cannot delete a training day they didn't create");
         }
 
         trainingDayRepository.delete(trainingDay);
@@ -94,19 +96,19 @@ public class TrainingDayService {
 
     public TrainingDay getTrainingDayById(Long trainingDayId) {
         return trainingDayRepository.findById(trainingDayId)
-                .orElseThrow(() -> new RuntimeException("Training day not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Training day not found"));
     }
 
     public TrainingDay addExerciseToTrainingDay(Long trainingDayId, CreateTrainingDayExerciseRequest exerciseRequest, User user) {
         TrainingDay trainingDay = trainingDayRepository.findById(trainingDayId)
-                .orElseThrow(() -> new RuntimeException("Training day not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Training day not found"));
 
         if (!trainingDay.getCreator().getId().equals(user.getId())) {
-            throw new RuntimeException("User cannot modify a training day they didn't create");
+            throw new UnauthorizedAccessException("User cannot modify a training day they didn't create");
         }
 
         Exercise exercise = exerciseRepository.findById(exerciseRequest.getExerciseId())
-                .orElseThrow(() -> new RuntimeException("Exercise not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Exercise not found"));
 
         TrainingDayExercise trainingDayExercise = new TrainingDayExercise();
         trainingDayExercise.setTrainingDay(trainingDay);
@@ -122,15 +124,15 @@ public class TrainingDayService {
 
     public TrainingDay updateExerciseInTrainingDay(Long trainingDayId, Long exerciseId, CreateTrainingDayExerciseRequest exerciseRequest, User user) {
         TrainingDay trainingDay = trainingDayRepository.findById(trainingDayId)
-                .orElseThrow(() -> new RuntimeException("Training day not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Training day not found"));
 
         if (!trainingDay.getCreator().getId().equals(user.getId())) {
-            throw new RuntimeException("User cannot modify a training day they didn't create");
+            throw new UnauthorizedAccessException("User cannot modify a training day they didn't create");
         }
 
         TrainingDayExerciseId trainingDayExerciseId = new TrainingDayExerciseId(trainingDayId, exerciseId);
         TrainingDayExercise trainingDayExercise = trainingDayExerciseRepository.findById(trainingDayExerciseId)
-                .orElseThrow(() -> new RuntimeException("Exercise not found in training day"));
+                .orElseThrow(() -> new ResourceNotFoundException("Exercise not found in training day"));
 
         trainingDayExercise.setDefaultSeries(exerciseRequest.getSeries());
         trainingDayExercise.setDefaultRepetitions(exerciseRequest.getRepetitions());
@@ -142,7 +144,7 @@ public class TrainingDayService {
 
     public TrainingDay removeExerciseFromTrainingDay(Long trainingDayId, Long exerciseId, User user) {
         TrainingDay trainingDay = trainingDayRepository.findById(trainingDayId)
-                .orElseThrow(() -> new RuntimeException("Training day not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Training day not found"));
 
         if (!trainingDay.getCreator().getId().equals(user.getId())) {
             throw new RuntimeException("User cannot modify a training day they didn't create");
@@ -150,7 +152,7 @@ public class TrainingDayService {
 
         TrainingDayExerciseId trainingDayExerciseId = new TrainingDayExerciseId(trainingDayId, exerciseId);
         TrainingDayExercise trainingDayExercise = trainingDayExerciseRepository.findById(trainingDayExerciseId)
-                .orElseThrow(() -> new RuntimeException("Exercise not found in training day"));
+                .orElseThrow(() -> new UnauthorizedAccessException("Exercise not found in training day"));
 
         trainingDay.getExercises().remove(trainingDayExercise);
         trainingDayExerciseRepository.delete(trainingDayExercise);

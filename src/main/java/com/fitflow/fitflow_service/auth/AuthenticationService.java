@@ -1,6 +1,7 @@
 package com.fitflow.fitflow_service.auth;
 
-import com.fitflow.fitflow_service.common.exception.UserAlreadyExistsException;
+import com.fitflow.fitflow_service.common.exception.DataAlreadyExistsException;
+import com.fitflow.fitflow_service.common.exception.ResourceNotFoundException;
 import com.fitflow.fitflow_service.common.response.ApiResponse;
 import com.fitflow.fitflow_service.user.enums.UserType;
 import com.fitflow.fitflow_service.user.model.User;
@@ -28,11 +29,10 @@ public class AuthenticationService {
 
     public ApiResponse<AuthenticationResponse> register(RegisterRequest request) {
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
-            throw new UserAlreadyExistsException("O e-mail já está registrado: " + request.getEmail());
+            throw new DataAlreadyExistsException("O e-mail já está registrado: " + request.getEmail());
         }
 
         UserType userType = request.getUser_type() != null ? request.getUser_type() : UserType.STUDENT;
-        System.out.println("tipo do user======= " + userType);
 
         // Criação do usuário
         var user = User.builder()
@@ -63,7 +63,7 @@ public class AuthenticationService {
                 .userType(userType.toString())
                 .build();
 
-        return new ApiResponse<>(true, "Usuário registrado com sucesso", authResponse, HttpStatus.CREATED.value());
+        return ApiResponse.success("Usuário registrado com sucesso", authResponse, HttpStatus.CREATED.value());
     }
 
     public ApiResponse<AuthenticationResponse> authenticate(AuthenticationRequest request, AuthenticationManager authenticationManager) {
@@ -75,7 +75,7 @@ public class AuthenticationService {
         );
 
         var user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado: " + request.getEmail()));
+                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado: " + request.getEmail()));
 
         Map<String, Object> claims = new HashMap<>();
         claims.put("role", user.getUser_type().toString());
@@ -89,6 +89,6 @@ public class AuthenticationService {
                 .userType(user.getUser_type().toString())
                 .build();
 
-        return new ApiResponse<>(true, "Usuário autenticado com sucesso", authResponse, HttpStatus.CREATED.value());
+        return ApiResponse.success("Usuário autenticado com sucesso", authResponse, HttpStatus.CREATED.value());
     }
 }

@@ -1,5 +1,6 @@
 package com.fitflow.fitflow_service.config;
 
+import com.fitflow.fitflow_service.common.exception.ResourceNotFoundException;
 import com.fitflow.fitflow_service.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -22,7 +23,7 @@ public class ApplicationConfig {
     @Bean
     public UserDetailsService userDetailsService() {
         return username -> userRepository.findByEmail(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
     }
 
     @Bean

@@ -1,11 +1,9 @@
 package com.fitflow.fitflow_service.exercise.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fitflow.fitflow_service.user.model.User;
 import jakarta.persistence.*;
 import lombok.Data;
-
-import java.math.BigDecimal;
 
 @Data
 @Entity
@@ -33,6 +31,6 @@ public class Exercise {
 
     @ManyToOne
     @JoinColumn(name = "creator_id", nullable = false)
-    @JsonIgnoreProperties({"password", "email", "authorities", "active_plan"})
+    @JsonIgnore
     private User creator;
 }

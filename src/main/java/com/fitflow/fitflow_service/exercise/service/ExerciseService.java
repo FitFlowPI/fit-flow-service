@@ -1,9 +1,9 @@
 package com.fitflow.fitflow_service.exercise.service;
 
+import com.fitflow.fitflow_service.common.exception.ResourceNotFoundException;
+import com.fitflow.fitflow_service.common.exception.UnauthorizedAccessException;
 import com.fitflow.fitflow_service.exercise.dto.CreateExerciseRequest;
 import com.fitflow.fitflow_service.exercise.dto.UpdateExerciseRequest;
-import com.fitflow.fitflow_service.exercise.exception.ExerciseNotFoundException;
-import com.fitflow.fitflow_service.exercise.exception.UnauthorizedExerciseAccessException;
 import com.fitflow.fitflow_service.exercise.model.Exercise;
 import com.fitflow.fitflow_service.exercise.repository.ExerciseRepository;
 import com.fitflow.fitflow_service.user.enums.UserType;
@@ -38,16 +38,16 @@ public class ExerciseService {
         } else if (user.getUser_type() == UserType.AUTO_TRAINER) {
             return exerciseRepository.findByCreatorId(user.getId());
         } else {
-            throw new UnauthorizedExerciseAccessException("User type not allowed to view exercises");
+            throw new UnauthorizedAccessException("User type not allowed to view exercises");
         }
     }
 
     public Exercise getExerciseById(Long exerciseId, User user) {
         Exercise exercise = exerciseRepository.findById(exerciseId)
-                .orElseThrow(() -> new ExerciseNotFoundException("Exercise not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Exercise not found"));
 
         if (!exercise.getCreator().getId().equals(user.getId()) && user.getUser_type() == UserType.AUTO_TRAINER) {
-            throw new UnauthorizedExerciseAccessException("Auto Trainer cannot view an exercise they didn't create");
+            throw new UnauthorizedAccessException("Auto Trainer cannot view an exercise they didn't create");
         }
 
         return exercise;
@@ -55,10 +55,10 @@ public class ExerciseService {
 
     public Exercise updateExercise(Long exerciseId, UpdateExerciseRequest request, User user) {
         Exercise exercise = exerciseRepository.findById(exerciseId)
-                .orElseThrow(() -> new ExerciseNotFoundException("Exercise not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Exercise not found"));
 
         if (!exercise.getCreator().getId().equals(user.getId()) && user.getUser_type() == UserType.AUTO_TRAINER) {
-            throw new UnauthorizedExerciseAccessException("Auto Trainer cannot update an exercise they didn't create");
+            throw new UnauthorizedAccessException("Auto Trainer cannot update an exercise they didn't create");
         }
 
         exercise.setName(request.getName());
@@ -71,10 +71,10 @@ public class ExerciseService {
 
     public void deleteExercise(Long exerciseId, User user) {
         Exercise exercise = exerciseRepository.findById(exerciseId)
-                .orElseThrow(() -> new ExerciseNotFoundException("Exercise not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Exercise not found"));
 
         if (!exercise.getCreator().getId().equals(user.getId()) && user.getUser_type() == UserType.AUTO_TRAINER) {
-            throw new UnauthorizedExerciseAccessException("Auto Trainer cannot delete an exercise they didn't create");
+            throw new UnauthorizedAccessException("Auto Trainer cannot delete an exercise they didn't create");
         }
 
         exerciseRepository.delete(exercise);

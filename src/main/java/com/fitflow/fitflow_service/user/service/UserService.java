@@ -1,15 +1,12 @@
 package com.fitflow.fitflow_service.user.service;
 
-import ch.qos.logback.classic.encoder.JsonEncoder;
-import com.fitflow.fitflow_service.common.exception.UserNotFoundException;
+import com.fitflow.fitflow_service.common.exception.ResourceNotFoundException;
 import com.fitflow.fitflow_service.user.enums.Gender;
 import com.fitflow.fitflow_service.user.model.User;
 import com.fitflow.fitflow_service.user.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.math.BigDecimal;
 
 @Service
 @AllArgsConstructor
@@ -21,7 +18,7 @@ public class UserService {
 
     public User findUserByEmail(String email) {
         return userRepository.findByEmail(email)
-                .orElseThrow(() -> new UserNotFoundException("User with email " + email + " not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User with email " + email + " not found"));
     }
 
     public void updateName(User user, String newName) {
