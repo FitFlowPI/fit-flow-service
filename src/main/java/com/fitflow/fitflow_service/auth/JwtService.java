@@ -32,6 +32,15 @@ public class JwtService {
                 .compact();
     }
 
+    public String generateEmailToken(String email) {
+        return Jwts.builder()
+                .setSubject(email) // The subject is the user's email
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationTime)) // Set the expiration time
+                .signWith(getSignInKey(), SignatureAlgorithm.HS256) // Sign with HMAC
+                .compact();
+    }
+
     public boolean isTokenValid(String token, UserDetails userDetails) {
         final String username = extractUserName(token);
         return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);

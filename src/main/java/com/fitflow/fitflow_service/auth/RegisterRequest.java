@@ -24,7 +24,7 @@ public class RegisterRequest {
     private String email;
 
     @NotBlank(message = "A senha é obrigatória")
-    @Size(min = 6, message = "A senha deve ter pelo menos 6 caracteres")
+    @Size(min = 8, message = "A senha deve ter pelo menos 8 caracteres")
     private String password;
 
     private Boolean active_plan = true; //TODO: se o usuário começar como false ele não consegue fazer login, precisaremos alterar para que ele consiga fazer login mas não tenha acesso as funcionalidades pagas

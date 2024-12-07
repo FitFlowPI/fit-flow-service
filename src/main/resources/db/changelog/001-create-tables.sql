@@ -4,7 +4,7 @@ CREATE TABLE users (
    email TEXT UNIQUE NOT NULL,
    password TEXT NOT NULL,
    active_plan BOOLEAN DEFAULT FALSE,
-   user_type TEXT CHECK (user_type IN ('student', 'auto_trainer', 'gym', 'personal_trainer')) NOT NULL
+   user_type TEXT CHECK (user_type IN ('STUDENT', 'AUTO_TRAINER', 'PERSONAL_TRAINER')) NOT NULL
 );
 
 CREATE TABLE subscriptions (
