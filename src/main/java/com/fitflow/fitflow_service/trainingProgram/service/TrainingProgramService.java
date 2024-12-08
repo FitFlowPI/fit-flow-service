@@ -74,4 +74,13 @@ public class TrainingProgramService {
 
         return trainingProgram;
     }
+
+    public List<TrainingProgram> getAllTrainingPrograms() {
+        return trainingProgramRepository.findAll();
+    }
+
+    public TrainingProgram getTrainingProgramById(Long id) {
+        return trainingProgramRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Training program not found"));
+    }
 }

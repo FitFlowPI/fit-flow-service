@@ -15,6 +15,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/training-program")
@@ -43,6 +45,22 @@ public class TrainingProgramController {
         User creator = userService.findUserByEmail(userDetails.getUsername());
         TrainingProgram trainingProgram = trainingProgramService.updateTrainingProgram(id, request, creator);
         ApiResponse<TrainingProgram> response = ApiResponse.success("Training program updated successfully", trainingProgram, HttpStatus.OK.value());
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping
+    @PreAuthorize("hasRole('PERSONAL_TRAINER') or hasRole('AUTO_TRAINER')")
+    public ResponseEntity<ApiResponse<List<TrainingProgram>>> getAllTrainingPrograms() {
+        List<TrainingProgram> trainingPrograms = trainingProgramService.getAllTrainingPrograms();
+        ApiResponse<List<TrainingProgram>> response = ApiResponse.success("Training programs retrieved successfully", trainingPrograms, HttpStatus.OK.value());
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/{id}")
+    @PreAuthorize("hasRole('PERSONAL_TRAINER') or hasRole('AUTO_TRAINER')")
+    public ResponseEntity<ApiResponse<TrainingProgram>> getTrainingProgramById(@PathVariable Long id) {
+        TrainingProgram trainingProgram = trainingProgramService.getTrainingProgramById(id);
+        ApiResponse<TrainingProgram> response = ApiResponse.success("Training program retrieved successfully", trainingProgram, HttpStatus.OK.value());
         return ResponseEntity.ok(response);
     }
 }
