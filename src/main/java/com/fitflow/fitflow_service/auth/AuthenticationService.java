@@ -84,6 +84,7 @@ public class AuthenticationService {
 
         AuthenticationResponse authResponse = AuthenticationResponse.builder()
                 .token(jwtToken)
+                .userId(user.getId())
                 .email(user.getEmail())
                 .name(user.getName())
                 .userType(user.getUser_type().toString())
