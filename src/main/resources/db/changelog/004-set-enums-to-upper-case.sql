@@ -1,9 +1,9 @@
 -- Remover a constraint de user_type, caso exista
-ALTER TABLE users DROP CONSTRAINT IF EXISTS user_user_type_check;
+ALTER TABLE users DROP CONSTRAINT IF EXISTS user_type_check;
 
 -- Adicionar a nova constraint para user_type com valores em letras maiúsculas
 ALTER TABLE users
-    ADD CONSTRAINT user_user_type_check
+    ADD CONSTRAINT user_type_check
         CHECK (user_type IN ('STUDENT', 'AUTO_TRAINER', 'PERSONAL_TRAINER'));
 
 -- Remover a constraint de gender, caso exista
