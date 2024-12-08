@@ -2,6 +2,7 @@ package com.fitflow.fitflow_service.trainingProgram.controller;
 
 import com.fitflow.fitflow_service.common.response.ApiResponse;
 import com.fitflow.fitflow_service.trainingProgram.dto.CreateTrainingProgramRequest;
+import com.fitflow.fitflow_service.trainingProgram.dto.UpdateTrainingProgramRequest;
 import com.fitflow.fitflow_service.trainingProgram.model.TrainingProgram;
 import com.fitflow.fitflow_service.trainingProgram.service.TrainingProgramService;
 import com.fitflow.fitflow_service.user.model.User;
@@ -31,5 +32,17 @@ public class TrainingProgramController {
         TrainingProgram trainingProgram = trainingProgramService.createTrainingProgram(request, creator);
         ApiResponse<TrainingProgram> response = ApiResponse.success("Training program created successfully", trainingProgram, HttpStatus.CREATED.value());
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @PutMapping("/update/{id}")
+    @PreAuthorize("hasRole('PERSONAL_TRAINER') or hasRole('AUTO_TRAINER')")
+    public ResponseEntity<ApiResponse<TrainingProgram>> updateTrainingProgram(
+            @PathVariable Long id,
+            @AuthenticationPrincipal UserDetails userDetails,
+            @RequestBody UpdateTrainingProgramRequest request) {
+        User creator = userService.findUserByEmail(userDetails.getUsername());
+        TrainingProgram trainingProgram = trainingProgramService.updateTrainingProgram(id, request, creator);
+        ApiResponse<TrainingProgram> response = ApiResponse.success("Training program updated successfully", trainingProgram, HttpStatus.OK.value());
+        return ResponseEntity.ok(response);
     }
 }
