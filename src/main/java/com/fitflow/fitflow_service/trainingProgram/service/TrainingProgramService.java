@@ -83,4 +83,10 @@ public class TrainingProgramService {
         return trainingProgramRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Training program not found"));
     }
+
+    public void deleteTrainingProgram(Long id) {
+        TrainingProgram trainingProgram = trainingProgramRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Training program not found"));
+        trainingProgramRepository.delete(trainingProgram);
+    }
 }

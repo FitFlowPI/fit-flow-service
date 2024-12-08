@@ -63,4 +63,12 @@ public class TrainingProgramController {
         ApiResponse<TrainingProgram> response = ApiResponse.success("Training program retrieved successfully", trainingProgram, HttpStatus.OK.value());
         return ResponseEntity.ok(response);
     }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('PERSONAL_TRAINER') or hasRole('AUTO_TRAINER')")
+    public ResponseEntity<ApiResponse<Void>> deleteTrainingProgram(@PathVariable Long id) {
+        trainingProgramService.deleteTrainingProgram(id);
+        ApiResponse<Void> response = ApiResponse.success("Training program deleted successfully", null, HttpStatus.NO_CONTENT.value());
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(response);
+    }
 }
