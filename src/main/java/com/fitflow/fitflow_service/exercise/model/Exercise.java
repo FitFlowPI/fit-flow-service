@@ -29,6 +29,9 @@ public class Exercise {
     @Column(name = "rest_interval")
     private Integer restInterval; // em segundos
 
+    @Column(name = "category")
+    private String category;
+
     @ManyToOne
     @JoinColumn(name = "creator_id", nullable = false)
     @JsonIgnore
