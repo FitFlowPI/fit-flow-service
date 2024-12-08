@@ -28,9 +28,9 @@ public class TrainingDayExercise {
     @Column(name = "default_repetitions", nullable = false)
     private Integer defaultRepetitions;
 
-    @Column(name = "default_weight",nullable = false)
+    @Column(name = "default_weight")
     private Double defaultWeight;
 
-    @Column(name = "default_rest_interval", nullable = false)
+    @Column(name = "default_rest_interval")
     private Integer defaultRestInterval;
 }
