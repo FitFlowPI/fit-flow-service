@@ -42,6 +42,10 @@ public class ExerciseService {
         }
     }
 
+    public List<Exercise> getDefaultExercises() {
+        return exerciseRepository.findByIsDefaultTrue();
+    }
+
     public Exercise getExerciseById(Long exerciseId, User user) {
         Exercise exercise = exerciseRepository.findById(exerciseId)
                 .orElseThrow(() -> new ResourceNotFoundException("Exercise not found"));

@@ -33,4 +33,7 @@ public class Exercise {
     @JoinColumn(name = "creator_id", nullable = false)
     @JsonIgnore
     private User creator;
+
+    @Column(name = "is_default", nullable = false)
+    private Boolean isDefault = false;
 }

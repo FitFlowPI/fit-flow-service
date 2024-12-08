@@ -46,6 +46,13 @@ public class ExerciseController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/default")
+    @PreAuthorize("hasRole('PERSONAL_TRAINER') or hasRole('AUTO_TRAINER')")
+    public ResponseEntity<ApiResponse<List<Exercise>>> getDefaultExercises() {
+        List<Exercise> exercises = exerciseService.getDefaultExercises();
+        ApiResponse<List<Exercise>> response = ApiResponse.success("Default exercises retrieved successfully", exercises, HttpStatus.OK.value());
+        return ResponseEntity.ok(response);
+    }
 
 
     @PutMapping("/{exerciseId}")
