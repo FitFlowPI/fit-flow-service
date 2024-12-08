@@ -32,7 +32,7 @@ public class AuthenticationService {
             throw new DataAlreadyExistsException("O e-mail já está registrado: " + request.getEmail());
         }
 
-        UserType userType = request.getUser_type() != null ? request.getUser_type() : UserType.STUDENT;
+        UserType userType = request.getUser_type() != null ? request.getUser_type() : UserType.AUTO_TRAINER;
 
         // Criação do usuário
         var user = User.builder()
